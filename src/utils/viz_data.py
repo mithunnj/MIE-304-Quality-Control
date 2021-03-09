@@ -33,3 +33,22 @@ def cumulative_frequency_plot(data, bins):
 
     return
 
+def box_plot(data):
+    plt.boxplot(data.Densities)
+    plt.grid(True)
+    plt.show()
+    print("Successfully finished plotting Box Plot.")
+
+    return
+
+def time_series_plot(data):
+    y = [i[0] for i in data.values.tolist()]
+    x = [i for i in range(1, len(y)+1)]
+
+    plt.scatter(x, y)
+    plt.show()
+
+    print('Succesfully created Scatter Plot')
+
+    return
+

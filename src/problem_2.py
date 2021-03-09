@@ -10,7 +10,7 @@ import argparse
 import os
 
 from utils.load_data import load_csv
-from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot
+from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot, box_plot, time_series_plot
 
 # Globals
 Q2_DATA_FP = "../data/02_data.csv"
@@ -21,6 +21,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--q1', help='Run question 1')
 parser.add_argument('--q2', help='Run question 2')
 parser.add_argument('--q3', help='Run question 3')
+parser.add_argument('--q4', help='Run question 4')
+parser.add_argument('--q5', help='Run question 5')
 args = parser.parse_args()
 
 if args.q1:
@@ -33,3 +35,6 @@ if args.q2:
 if args.q3:
     bins = 6
     cumulative_frequency_plot(DATA, bins)
+
+if args.q5:
+    time_series_plot(DATA)
