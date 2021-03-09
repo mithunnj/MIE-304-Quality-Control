@@ -11,7 +11,7 @@ import os
 
 from utils.load_data import load_csv
 from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot, box_plot, time_series_plot
-from utils.calc_stats import mode_mean_median_calc
+from utils.calc_stats import mode_mean_median_calc, IQR
 
 # Globals
 Q2_DATA_FP = "../data/02_data.csv"
@@ -25,6 +25,7 @@ parser.add_argument('--q3', help='Run question 3')
 parser.add_argument('--q4', help='Run question 4')
 parser.add_argument('--q5', help='Run question 5')
 parser.add_argument('--q6', help='Run question 6')
+parser.add_argument('--q7', help='Run question 7')
 args = parser.parse_args()
 
 if args.q1:
@@ -45,7 +46,10 @@ if args.q5:
     time_series_plot(DATA)
 
 if args.q6:
-    mode, median, mean = mode_mean_median_calc(DATA)
-
+    mode, mean, median = mode_mean_median_calc(DATA)
     print(" Mode: {}\n\n Median: {}\n Mean: {}".format(mode, median, mean))
+
+if args.q7:
+    iqr = IQR(DATA)
+    print('Inter quantile range (IQR) is: {}'.format(iqr))
 
