@@ -11,7 +11,7 @@ import os
 
 from utils.load_data import load_csv
 from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot, box_plot, time_series_plot
-from utils.calc_stats import mode_mean_median_calc, IQR
+from utils.calc_stats import mode_mean_median_calc, IQR, binom, geometric
 
 # Globals
 Q2_DATA_FP = "../data/02_data.csv"
@@ -26,6 +26,9 @@ parser.add_argument('--q4', help='Run question 4')
 parser.add_argument('--q5', help='Run question 5')
 parser.add_argument('--q6', help='Run question 6')
 parser.add_argument('--q7', help='Run question 7')
+parser.add_argument('--q8', help='Run question 8')
+parser.add_argument('--q9', help='Run question 9')
+parser.add_argument('--q10', help='Run question 10')
 args = parser.parse_args()
 
 if args.q1:
@@ -52,4 +55,28 @@ if args.q6:
 if args.q7:
     iqr = IQR(DATA)
     print('Inter quantile range (IQR) is: {}'.format(iqr))
+
+if args.q8:
+    num_success_head = 5
+    total_sample_size = 10
+    percent_success_head = 0.5
+    binom_result = binom(num_success_head, total_sample_size, percent_success_head)
+
+    print('Biomial distribution result: {}'.format(binom_result))
+
+if args.q9:
+    num_success = 7
+    total_sample_size = 10
+    percent_success = 0.9
+    binom_result = binom(num_success, total_sample_size, percent_success)
+
+    print('Biomial distribution result: {}'.format(binom_result))
+
+if args.q10:
+    num_success = 5
+    percent_fail = 0.05
+    geom_result = geometric(num_success, percent_fail)
+
+    print('Geometric distribution result: {}'.format(geom_result))
+
 

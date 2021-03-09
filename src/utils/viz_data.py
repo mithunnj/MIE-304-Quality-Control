@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import sys
 
 def stem_plot(data):
+    '''
+    data: Represented as a pd dataframe
+    '''
     ret_plot, ret_axes = stl.stem_graphic(data.Densities, asc=False)
     plt.show()
     print("Successfully finished plotting Stem Plot")
@@ -14,6 +17,10 @@ def stem_plot(data):
     return
 
 def histogram_plot(data, bins):
+    '''
+    data: Represented as a pd dataframe
+    bins: # of sub bins to store the histogram buckets
+    '''
     if not bins:
         sys.exit('ERROR: <viz_data> assertion failed to find valid number of bins for Histogram')
 
@@ -24,6 +31,10 @@ def histogram_plot(data, bins):
     return
 
 def cumulative_frequency_plot(data, bins):
+    '''
+    data: Represented as a pd dataframe
+    bins: # of sub bins to store the histogram buckets
+    '''
     if not bins:
         sys.exit('ERROR: <viz_data> assertion failed to find valid number of bins for Histogram')
 
@@ -34,6 +45,9 @@ def cumulative_frequency_plot(data, bins):
     return
 
 def box_plot(data):
+    '''
+    data: Represented as a pd dataframe
+    '''
     plt.boxplot(data.Densities)
     plt.grid(True)
     plt.show()
@@ -42,6 +56,9 @@ def box_plot(data):
     return
 
 def time_series_plot(data):
+    '''
+    data: Represented as a pd dataframe
+    '''
     y = [i[0] for i in data.values.tolist()]
     x = [i for i in range(1, len(y)+1)]
 
