@@ -4,6 +4,7 @@ Description: Utils to calculate statistics for user
 '''
 import scipy.stats as stat
 import sys
+import math
 
 def mode_mean_median_calc(data):
     '''
@@ -92,4 +93,56 @@ def normal(request_data, population_mean, population_std):
     normal_results = stat.norm.cdf(request_data, population_mean, population_std)
 
     return normal_results
+
+def null_hypothesis_testing(df, column_name, null_hypothesis):
+    '''
+    Inputs:
+        - df: The panda data frame that is loaded in (from a .csv file for example)
+        - column_name: The columns name that we are parsing information for (ex. ‘Net Contents (Oz)’)
+        - null hypothesis: The null hypothesis to test for given in the question.
+    - Similar question: https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample/more-significance-testing-videos/v/hypothesis-testing-and-p-values
+        - Approach: Hypothesis Test with P-value
+    '''
+
+    ## Step 1: Determine the Hypothesis
+    ### Null Hypothesis: Population mean (mu) equals exactly 12
+    ### Alternative Hypothesis: Population mean (mu) does not equal 12
+    df_copy = df.copy() # Make a copy of the data frame to avoid changing the loaded df
+
+    q1_filtered = df_copy[df_copy[column_name].notna()]
+    q1_data = q1_filtered[column_name]
+    mu_samp = q1_data.mean() # 12.004399999999999
+    sig_samp = q1_data.std() # 0.02310844001658249
+    total_sample = len(q1_data) # 25, with row 26 removed due to NaN
+
+    ## Step 2: Prove Null Hypothesis
+    ### Determine population mean (mu_pop) and population standard deviation (sig_pop)
+    ###     from sample mean (mu_samp) and sample standard deviation (sig_samp)
+    mu_pop = null_hypothesis # Null Hypothesis from question
+    sig_pop = sig_samp/(math.sqrt(total_sample)) # An approximation of the pop. std deviation
+
+    ## Step 3: Calculate the t-score
+    ### (mu_pop - mu_samp) / sig_pop
+    t_score = abs((mu_pop - mu_samp)/sig_pop)
+
+    ## Step 4: Calculate p-value from T score as outlined here: https://stackoverflow.com/questions/23879049/finding-two-tailed-p-value-from-t-distribution-and-degrees-of-freedom-in-python
+    p_value = stat.t.sf(t_score, total_sample - 1)*2 #twosided
+
+    ## Step 5: Validate null hypothesis
+    ### Based on this p-value wiki: https://www.google.com/search?q=p-value+threshold+for+hypothesis+test&oq=p-value+threshold+for+hypothesis+test&aqs=chrome..69i57j33i22i29i30i395l7.7110j1j7&sourceid=chrome&ie=UTF-8
+    ###     "Usage. The p-value is widely used in statistical hypothesis testing, specifically in null hypothesis significance testing. ... For typical analysis, using the 
+    ###     standard α = 0.05 cutoff, the null hypothesis is rejected when p < .05 and not rejected when p > .05."
+    print("\nQ1 Results: \n")
+    print("Null Hypothesis REJECTED because of p-value") if (p_value < 0.05) else print("Null Hypothesis NOT REJECTED because of p-value")
+    print("\n Extra stats: \
+        \n\t Mu Pop. (Mean): {}\
+        \n\t Sig Pop. (Std): {}\
+        \n\t Mu Sample (Mean): {}\
+        \n\t Sig Sample (Std): {}\
+        \n\t Sample size: {}\
+        \n\t T-score: {}\
+        \n\t p_value: {} \
+        ".format(mu_pop, sig_pop, mu_samp, sig_samp, total_sample, t_score, p_value))
+
+    return
 
