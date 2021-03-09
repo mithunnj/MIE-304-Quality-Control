@@ -10,7 +10,7 @@ import argparse
 import os
 
 from utils.load_data import load_csv
-from utils.viz_data import viz_data
+from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot
 
 # Globals
 Q2_DATA_FP = "../data/02_data.csv"
@@ -24,10 +24,12 @@ parser.add_argument('--q3', help='Run question 3')
 args = parser.parse_args()
 
 if args.q1:
-    viz_data(DATA, stem_plot=True)
+    stem_plot(DATA)
 
 if args.q2:
-    viz_data(DATA, histogram=True, bins=6)
+    bins = 6
+    histogram_plot(DATA, bins)
 
 if args.q3:
-    viz_data(DATA, cumulative_frequency=True, bins=6)
+    bins = 6
+    cumulative_frequency_plot(DATA, bins)
