@@ -3,6 +3,7 @@ Owner: Mit Jothiravi 1002321258
 Description: Utils to calculate statistics for user
 '''
 import scipy.stats as stat
+import numpy as np
 import sys
 import math
 
@@ -145,4 +146,27 @@ def null_hypothesis_testing(df, column_name, null_hypothesis):
         ".format(mu_pop, sig_pop, mu_samp, sig_samp, total_sample, t_score, p_value))
 
     return
+
+def type_2_beta(data, mu0, mu1, n):
+    '''
+    Inputs:
+        - data: pd dataframe
+        - mu0: The given population mean in the problem.
+        - mu1: This is the mu that is proposed that we are trying to find the probability of rejection.
+        - n: Sample size
+    
+    Used to calculate Beta: b = P{type II error} = P{fail to reject H0 |H0 is false}
+    '''
+
+    delta = mu1 - mu0
+    alpha = 0.05 # This is the standard cutoff value that we use for Null Hypothesis
+
+    s = data.std()
+    z_alpha2 = stat.norm.ppf(1-alpha/2)
+
+    beta = stat.norm.cdf((z_alpha2 - (delta*np.sqrt(n))/s),0,1) - stat.norm.cdf((-z_alpha2 - (delta*np.sqrt(n))/s),0,1) # This returns an array of Beta values
+
+    # Based on the solutions from the assignments, the first index seems to be it.
+
+    return beta[0]
 
