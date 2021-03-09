@@ -11,7 +11,7 @@ import os
 
 from utils.load_data import load_csv
 from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot, box_plot, time_series_plot
-from utils.calc_stats import mode_mean_median_calc, IQR, binom, geometric, hyper_geometric, poisson
+from utils.calc_stats import mode_mean_median_calc, IQR, binom, geometric, hyper_geometric, poisson, normal
 
 # Globals
 Q2_DATA_FP = "../data/02_data.csv"
@@ -31,6 +31,7 @@ parser.add_argument('--q9', help='Run question 9')
 parser.add_argument('--q10', help='Run question 10')
 parser.add_argument('--q11', help='Run question 11')
 parser.add_argument('--q12', help='Run question 12')
+parser.add_argument('--q13', help='Run question 13')
 args = parser.parse_args()
 
 if args.q1:
@@ -96,6 +97,18 @@ if args.q12:
     poisson_results = poisson(num_defects_per_unit_area, average_defects_per_unit_area)
 
     print('Poisson distribution result: {}'.format(poisson_results))
+
+if args.q13:
+    request_param = 182.88 # We want to know probability of data being greater than this
+    pop_mean = 175.1
+    pop_std = 7.42
+
+    request_param_less_than = normal(request_param, pop_mean, pop_std)
+
+    # We have to substract by 1 to get area under normal distribution that is greater than the request param
+    request_param_stats_greater_than = 1 - request_param_less_than
+
+    print('Normal distribution result: {}'.format(request_param_stats_greater_than))
 
 
 

@@ -78,3 +78,18 @@ def poisson(num_defects_per_unit, average_num_defects_per_unit):
 
     return poisson_results
 
+def normal(request_data, population_mean, population_std):
+    '''
+    Inputs:
+        - request_data: Probabilty information to compute for from the population statistics.
+        - population_mean: Straight forward
+        - population_std: Straight forward
+
+    NOTE: This will return the area under the normal distribution graph for the area < request_data.
+        If you want to determine probabilty of the event occuring for > request_data, you have to do 1 - return
+    '''
+
+    normal_results = stat.norm.cdf(request_data, population_mean, population_std)
+
+    return normal_results
+
