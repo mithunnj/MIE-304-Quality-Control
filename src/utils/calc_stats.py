@@ -55,12 +55,26 @@ def geometric(num_success, prob_failure):
 def hyper_geometric(num_failure_sample, pop_size, num_failure_pop, sample_size):
     '''
     Inpute:
-        num_failure_sample: Number of defective items we are calculating probability for in sample.
-        pop_size: Size of the population that our trial is drawing from, and that our statistics depend on.
-        num_failure_pop: Number of defective items that were stated in the population statistics.
-        sample_size: Size of the sample of our trial.
+        - num_failure_sample: Number of defective items we are calculating probability for in sample.
+        - pop_size: Size of the population that our trial is drawing from, and that our statistics depend on.
+        - num_failure_pop: Number of defective items that were stated in the population statistics.
+        - sample_size: Size of the sample of our trial.
     '''
 
     hyper_geom_results = stat.hypergeom.pmf(num_failure_sample, pop_size, num_failure_pop, sample_size)
 
     return hyper_geom_results
+
+def poisson(num_defects_per_unit, average_num_defects_per_unit):
+    '''
+    Input:
+        - num_defects_per_unit: When the question asks you the probability of # defects per 
+            unit of product, this is where you input it.
+        - average_num_defects_per_unit: This should be given in the question as the mu (average) numbeer
+            of defects in the system.
+    '''
+
+    poisson_results = stat.poisson.pmf(num_defects_per_unit, average_num_defects_per_unit)
+
+    return poisson_results
+

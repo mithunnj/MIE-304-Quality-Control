@@ -11,7 +11,7 @@ import os
 
 from utils.load_data import load_csv
 from utils.viz_data import stem_plot, histogram_plot, cumulative_frequency_plot, box_plot, time_series_plot
-from utils.calc_stats import mode_mean_median_calc, IQR, binom, geometric, hyper_geometric
+from utils.calc_stats import mode_mean_median_calc, IQR, binom, geometric, hyper_geometric, poisson
 
 # Globals
 Q2_DATA_FP = "../data/02_data.csv"
@@ -30,6 +30,7 @@ parser.add_argument('--q8', help='Run question 8')
 parser.add_argument('--q9', help='Run question 9')
 parser.add_argument('--q10', help='Run question 10')
 parser.add_argument('--q11', help='Run question 11')
+parser.add_argument('--q12', help='Run question 12')
 args = parser.parse_args()
 
 if args.q1:
@@ -81,13 +82,20 @@ if args.q10:
     print('Geometric distribution result: {}'.format(geom_result))
 
 if args.q11:
-    num_defects_sample = 1
+    num_defects_sample = 1 # This is what we want probability for
     sample_size = 3
     num_defects_pop = 5
     pop_size = 20
     hyper_geom_result = hyper_geometric(num_defects_sample, pop_size, num_defects_pop, sample_size)
 
     print('Hyper-geometric distribution result: {}'.format(hyper_geom_result))
+
+if args.q12:
+    num_defects_per_unit_area = 5 # This is what we want probability for
+    average_defects_per_unit_area = 3.2
+    poisson_results = poisson(num_defects_per_unit_area, average_defects_per_unit_area)
+
+    print('Poisson distribution result: {}'.format(poisson_results))
 
 
 
