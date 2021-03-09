@@ -1,6 +1,6 @@
 '''
 Owner: Mit Jothiravi 1002321258
-Description: Utils to load a .csv file
+Description: Utils to load data files
 '''
 import os
 import sys
