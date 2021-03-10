@@ -95,7 +95,7 @@ def normal(request_data, population_mean, population_std):
 
     return normal_results
 
-def null_hypothesis_testing(df, column_name, null_hypothesis):
+def null_hypothesis_testing_single_sample(df, column_name, null_hypothesis):
     '''
     Inputs:
         - df: The panda data frame that is loaded in (from a .csv file for example)
@@ -103,6 +103,8 @@ def null_hypothesis_testing(df, column_name, null_hypothesis):
         - null hypothesis: The null hypothesis to test for given in the question.
     - Similar question: https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample/more-significance-testing-videos/v/hypothesis-testing-and-p-values
         - Approach: Hypothesis Test with P-value
+
+    Use this for p-value testing for a single sample problem
     '''
 
     ## Step 1: Determine the Hypothesis
@@ -169,4 +171,3 @@ def type_2_beta(data, mu0, mu1, n):
     # Based on the solutions from the assignments, the first index seems to be it.
 
     return beta[0]
-
