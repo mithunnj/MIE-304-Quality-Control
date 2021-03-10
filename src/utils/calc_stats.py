@@ -236,7 +236,7 @@ def r_chart_values(data, sample_size):
         r_sample = max_val-min_val
         r_vals.append(r_sample) # This is to remove the weird numpy datastructure formatting
 
-    # Step 2: Calculate R-bar
+    # Step 2: Calculate R-bar (This will act like the CL for R-chart)
     r_bar = sum(r_vals)/len(r_vals) # (Sum of R values) / (Number of samples)
 
     # Step 3: Calculate Upper/Lower Control Limits
@@ -244,3 +244,36 @@ def r_chart_values(data, sample_size):
     LCL = D3[sample_size]*r_bar
 
     return r_vals, r_bar, UCL, LCL
+
+def x_bar_chart_values(data, sample_size, R_BAR):
+    '''
+    Inputs:
+        - data: pd.dataframe
+        - sample_size: Per sample, how many values are there
+        - R_BAR: This is the centre line from the R chart that should be computed before this
+
+    This will compute all the R-chart values that are required for X-bar and for plotting R-bar chart
+    '''
+    x_bar_vals = list() # Store for the X_bar values from all the samples
+
+    # Step 1: Calculate and store the range of all the sample ranges
+    for i in data['Sample Number'].unique().tolist():
+
+        # Parse sample specific data
+        ## NOTE: Make sure that you change the field that you want to parse the data for - in this case Voltage
+        sample_data = data[data['Sample Number'] == i]['Voltage']
+
+        # Calculate average of sample (x_bar)
+        x_bar = sample_data.mean()
+        x_bar_vals.append(x_bar)
+
+
+    # Step 2: Calculate X_bar_bar (Average of all sample averages)
+    x_bar_bar = sum(x_bar_vals) / len(x_bar_vals) 
+
+    # Step 3: Calculate Upper/Lower Control Limits
+    UCL = x_bar_bar + A2[sample_size]*R_BAR
+    LCL = x_bar_bar - A2[sample_size]*R_BAR
+
+    return x_bar_bar, UCL, LCL
+
