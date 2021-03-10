@@ -4,6 +4,7 @@ Description: Utils to visualize data with various plots
 '''
 import stemgraphic as stl
 import matplotlib.pyplot as plt
+import numpy as np
 import sys
 
 def stem_plot(data):
@@ -68,4 +69,33 @@ def time_series_plot(data):
     print('Succesfully created Scatter Plot')
 
     return
+
+def x_bar_r_chart_plot(num_samples, LIST_VAL, CL, LCL, UCL, chart_name):
+    '''
+    Input: 
+        - num_samples: The number of total samples taken in this trial (m). NOTE: This isn't the size of an individual sample.
+        - LIST_VAL: List of values (ex. X-bar values for X-bar chart, or R values for all samples for R-chart)
+        - CL, UCL, LCL: Control limits for the respective charts pre-computed
+        - chart_name: String representing the name of the chart for the plot (ex. X-bar, R)
+    '''
+
+    # Generate straight lines for the Control Limits
+    ucl_line=np.full(num_samples, UCL)
+    lcl_line=np.full(num_samples, LCL)
+    cl_line=np.full(num_samples, CL)
+
+    # Generate enough space for number of samples taken
+    x=list(range(0,num_samples))
+
+    plt.plot(LIST_VAL, marker="o")
+    plt.plot(ucl_line, color='k')
+    plt.plot(lcl_line, color='k')
+    plt.plot(cl_line, color='k')
+    plt.xticks(x) #Creates x axis ticks
+    plt.grid(True)
+    plt.title('{} chart'.format(chart_name))
+    plt.show()
+
+    return
+
 
