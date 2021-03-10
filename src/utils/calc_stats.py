@@ -275,5 +275,29 @@ def x_bar_chart_values(data, sample_size, R_BAR):
     UCL = x_bar_bar + A2[sample_size]*R_BAR
     LCL = x_bar_bar - A2[sample_size]*R_BAR
 
-    return x_bar_bar, UCL, LCL
+    return x_bar_vals, x_bar_bar, UCL, LCL
+
+def chart_control_type(chart_name, param_vals, param_UCL, param_LCL):
+    '''
+    Input:
+        - chart_name: Specify the type of chart that we are checking for. (ex. X-bar, R, S, etc.)
+        - param_vals: All the computed values for the specific chart type, for the sample process
+        - param_UCL: Upper control limit
+        - param_LCL: Lower control limit
+
+    Given the chart values, check if the process is in control. It will just print the results to the console.
+    '''
+
+    # Verify that parameters do not fall out of the control limits
+    for param in param_vals:
+        if param < param_LCL or param > param_UCL:
+            print("FAILURE: {} chart is out of control because Val: {}, falls out of control limits: LCL {}, UCL {}".format(chart_name, param, param_LCL, param_UCL))
+            return
+
+    
+    print("PASS: {} chart is in control".format(chart_name))
+
+    return
+
+
 

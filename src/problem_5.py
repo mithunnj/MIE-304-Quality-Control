@@ -10,7 +10,7 @@ import argparse
 import os
 
 from utils.load_data import load_csv
-from utils.calc_stats import r_chart_values, x_bar_chart_values
+from utils.calc_stats import r_chart_values, x_bar_chart_values, chart_control_type
 
 # Globals
 Q5_DATA_FP = "../data/05_data.csv"
@@ -33,11 +33,12 @@ if args.q1:
     R_VALS, R_BAR, R_UCL, R_LCL = r_chart_values(DATA, sample_size)
     
     # Calculate X-bar chart values
-    X_BAR_BAR, X_BAR_UCL, X_BAR_LCL = x_bar_chart_values(DATA, sample_size, R_BAR)
+    X_BAR_VALS, X_BAR_BAR, X_BAR_UCL, X_BAR_LCL = x_bar_chart_values(DATA, sample_size, R_BAR)
 
-    print(X_BAR_BAR)
-    print(X_BAR_UCL)
-    print(X_BAR_LCL)
+    # Check if R-chart is in control
+    chart_control_type('R', R_VALS, R_UCL, R_LCL)
+    chart_control_type('X-bar', X_BAR_VALS, X_BAR_UCL, X_BAR_LCL)
+
 
  
     
