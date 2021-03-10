@@ -7,6 +7,45 @@ import numpy as np
 import sys
 import math
 
+# Create Table of Constants for Control Charts
+A2 = {
+    2: 1.880, 
+    3: 1.023,
+    4: 0.729, 
+    5: 0.577, 
+    6: 0.483, 
+    7: 0.419,
+    8: 0.373,
+    9: 0.337,
+    10: 0.308
+    }
+
+D3 = {
+    2: 0, 
+    3: 0,
+    4: 0, 
+    5: 0, 
+    6: 0, 
+    7: 0.076,
+    8: 0.136,
+    9: 0.184,
+    10: 0.223
+    }
+
+D4 = {
+    2: 3.267, 
+    3: 2.574,
+    4: 2.282, 
+    5: 2.114, 
+    6: 2.004, 
+    7: 1.924,
+    8: 1.864,
+    9: 1.816,
+    10: 1.777
+    }
+
+
+
 def mode_mean_median_calc(data):
     '''
     data: Represented as a pd dataframe
@@ -171,3 +210,37 @@ def type_2_beta(data, mu0, mu1, n):
     # Based on the solutions from the assignments, the first index seems to be it.
 
     return beta[0]
+
+def r_chart_values(data, sample_size):
+    '''
+    Inputs:
+        - data: pd.dataframe
+        - sample_size: Per sample, how many values are there
+
+    This will compute all the R-chart values that are required for X-bar and for plotting R-bar chart
+    '''
+
+    r_vals = list() # Store for the R values from all the samples
+
+    # Step 1: Calculate and store the range of all the sample ranges
+    for i in data['Sample Number'].unique().tolist():
+
+        # Parse sample specific data
+        ## NOTE: Make sure that you change the field that you want to parse the data for - in this case Voltage
+        sample_data = data[data['Sample Number'] == i]['Voltage']
+
+        # Fetch max/min value
+        max_val = sample_data.max()
+        min_val = sample_data.min()
+
+        r_sample = max_val-min_val
+        r_vals.append(r_sample) # This is to remove the weird numpy datastructure formatting
+
+    # Step 2: Calculate R-bar
+    r_bar = sum(r_vals)/len(r_vals) # (Sum of R values) / (Number of samples)
+
+    # Step 3: Calculate Upper/Lower Control Limits
+    UCL = D4[sample_size]*r_bar
+    LCL = D3[sample_size]*r_bar
+
+    return r_vals, r_bar, UCL, LCL
