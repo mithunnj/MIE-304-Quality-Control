@@ -70,7 +70,7 @@ def time_series_plot(data):
 
     return
 
-def x_bar_r_chart_plot(num_samples, LIST_VAL, CL, LCL, UCL, chart_name):
+def x_bar_any_chart_plot(num_samples, LIST_VAL, CL, LCL, UCL, chart_name):
     '''
     Input: 
         - num_samples: The number of total samples taken in this trial (m). NOTE: This isn't the size of an individual sample.

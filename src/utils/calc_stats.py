@@ -247,11 +247,12 @@ def type_2_beta(data, mu0, mu1, n):
 
     return beta[0]
 
-def r_chart_values(data, sample_size):
+def r_chart_values(data, sample_size, category_name):
     '''
     Inputs:
         - data: pd.dataframe
         - sample_size: Per sample, how many values are there
+        - category_name: The column of the dataframe that you want to parse
 
     This will compute all the R-chart values that are required for X-bar and for plotting R-bar chart
     '''
@@ -262,8 +263,7 @@ def r_chart_values(data, sample_size):
     for i in data['Sample Number'].unique().tolist():
 
         # Parse sample specific data
-        ## NOTE: Make sure that you change the field that you want to parse the data for - in this case Voltage
-        sample_data = data[data['Sample Number'] == i]['Voltage']
+        sample_data = data[data['Sample Number'] == i][category_name]
 
         # Fetch max/min value
         max_val = sample_data.max()
@@ -281,12 +281,75 @@ def r_chart_values(data, sample_size):
 
     return r_vals, r_bar, UCL, LCL
 
-def x_bar_chart_values(data, sample_size, R_BAR):
+def s_chart_values(data, sample_size, category_name):
+    '''
+    Inputs:
+        - data: pd.dataframe
+        - sample_size: Per sample, how many values are there
+        - category_name: The column of the dataframe that you want to parse
+
+    This will compute all the S-chart values that are required for X-bar and for plotting S-bar chart
+    '''
+
+    s_vals = list() # Store for the S values from all the samples
+
+    # Step 1: Calculate and store the range of all the sample ranges
+    for i in data['Sample Number'].unique().tolist():
+
+        # Parse sample specific data
+        ## NOTE: Make sure that you change the field that you want to parse the data for - in this case Thickness
+        sample_std = data[data['Sample Number'] == i][category_name].std()
+        s_vals.append(sample_std) 
+
+    # Step 2: Calculate S-bar (This will act like the CL for S-chart)
+    s_bar = sum(s_vals)/len(s_vals) # (Sum of S values) / (Number of samples)
+
+    # Step 3: Calculate Upper/Lower Control Limits
+    UCL = B4[sample_size]*s_bar
+    LCL = B3[sample_size]*s_bar
+
+    return s_vals, s_bar, UCL, LCL
+
+def x_bar_s_chart_values(data, sample_size, S_BAR, category_name):
+    '''
+    Inputs:
+        - data: pd.dataframe
+        - sample_size: Per sample, how many values are there
+        - S_BAR: This is the centre line from the S chart that should be computed before this
+        - category_name: The column of the dataframe that you want to parse
+
+    This will compute all the S-chart values that are required for X-bar and for plotting S-bar chart
+    '''
+    x_bar_vals = list() # Store for the X_bar values from all the samples
+
+    # Step 1: Calculate and store the range of all the sample ranges
+    for i in data['Sample Number'].unique().tolist():
+
+        # Parse sample specific data
+        ## NOTE: The category name depends on the column that you are trying to parse for in the data frame
+        sample_data = data[data['Sample Number'] == i][category_name]
+
+        # Calculate average of sample (x_bar)
+        x_bar = sample_data.mean()
+        x_bar_vals.append(x_bar)
+
+
+    # Step 2: Calculate X_bar_bar (Average of all sample averages)
+    x_bar_bar = sum(x_bar_vals) / len(x_bar_vals) 
+
+    # Step 3: Calculate Upper/Lower Control Limits
+    UCL = x_bar_bar + A3[sample_size]*S_BAR
+    LCL = x_bar_bar - A3[sample_size]*S_BAR
+
+    return x_bar_vals, x_bar_bar, UCL, LCL
+
+def x_bar_r_chart_values(data, sample_size, R_BAR, category_name):
     '''
     Inputs:
         - data: pd.dataframe
         - sample_size: Per sample, how many values are there
         - R_BAR: This is the centre line from the R chart that should be computed before this
+        - category_name: The column of the dataframe that you want to parse
 
     This will compute all the R-chart values that are required for X-bar and for plotting R-bar chart
     '''
@@ -297,7 +360,7 @@ def x_bar_chart_values(data, sample_size, R_BAR):
 
         # Parse sample specific data
         ## NOTE: Make sure that you change the field that you want to parse the data for - in this case Voltage
-        sample_data = data[data['Sample Number'] == i]['Voltage']
+        sample_data = data[data['Sample Number'] == i][category_name]
 
         # Calculate average of sample (x_bar)
         x_bar = sample_data.mean()
