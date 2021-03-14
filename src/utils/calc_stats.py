@@ -87,9 +87,9 @@ def mode_mean_median_calc(data):
     data: Represented as a pd dataframe
     '''
 
-    mode = data.Densities.mode()
-    mean = data.Densities.mean()
-    median = data.Densities.median()
+    mode = data.mode()
+    mean = data.mean()
+    median = data.median()
 
     return mode, mean, median
 
@@ -99,8 +99,8 @@ def IQR(data):
     data: Represented as a pd dataframe
     '''
 
-    upper_quantile = data.Densities.quantile(0.75)
-    lower_quantile = data.Densities.quantile(0.25)
+    upper_quantile = data.quantile(0.75)
+    lower_quantile = data.quantile(0.25)
 
     inter_quantile_range = upper_quantile - lower_quantile
 
@@ -170,14 +170,13 @@ def normal(request_data, population_mean, population_std):
 
     return normal_results
 
-def null_hypothesis_testing_single_sample(df, column_name, null_hypothesis):
+def null_hypothesis_testing(df, column_name, null_hypothesis, sample_mean=None, sample_std=None):
     '''
     Inputs:
         - df: The panda data frame that is loaded in (from a .csv file for example)
         - column_name: The columns name that we are parsing information for (ex. ‘Net Contents (Oz)’)
         - null hypothesis: The null hypothesis to test for given in the question.
-    - Similar question: https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample/more-significance-testing-videos/v/hypothesis-testing-and-p-values
-        - Approach: Hypothesis Test with P-value
+    - Approach: Hypothesis Test with P-value
 
     Use this for p-value testing for a single sample problem
     '''
@@ -189,8 +188,8 @@ def null_hypothesis_testing_single_sample(df, column_name, null_hypothesis):
 
     q1_filtered = df_copy[df_copy[column_name].notna()]
     q1_data = q1_filtered[column_name]
-    mu_samp = q1_data.mean() # 12.004399999999999
-    sig_samp = q1_data.std() # 0.02310844001658249
+    mu_samp = sample_mean if sample_mean else q1_data.mean() 
+    sig_samp =  sample_std if sample_std else q1_data.std() 
     total_sample = len(q1_data) # 25, with row 26 removed due to NaN
 
     ## Step 2: Prove Null Hypothesis
@@ -210,7 +209,7 @@ def null_hypothesis_testing_single_sample(df, column_name, null_hypothesis):
     ### Based on this p-value wiki: https://www.google.com/search?q=p-value+threshold+for+hypothesis+test&oq=p-value+threshold+for+hypothesis+test&aqs=chrome..69i57j33i22i29i30i395l7.7110j1j7&sourceid=chrome&ie=UTF-8
     ###     "Usage. The p-value is widely used in statistical hypothesis testing, specifically in null hypothesis significance testing. ... For typical analysis, using the 
     ###     standard α = 0.05 cutoff, the null hypothesis is rejected when p < .05 and not rejected when p > .05."
-    print("\nQ1 Results: \n")
+    print("\nQ4 Results: \n")
     print("Null Hypothesis REJECTED because of p-value") if (p_value < 0.05) else print("Null Hypothesis NOT REJECTED because of p-value")
     print("\n Extra stats: \
         \n\t Mu Pop. (Mean): {}\
@@ -245,7 +244,7 @@ def type_2_beta(data, mu0, mu1, n):
 
     # Based on the solutions from the assignments, the first index seems to be it.
 
-    return beta[0]
+    return beta
 
 def r_chart_values(data, sample_size, category_name):
     '''
@@ -260,10 +259,10 @@ def r_chart_values(data, sample_size, category_name):
     r_vals = list() # Store for the R values from all the samples
 
     # Step 1: Calculate and store the range of all the sample ranges
-    for i in data['Sample Number'].unique().tolist():
+    for i in data['Sample'].unique().tolist():
 
         # Parse sample specific data
-        sample_data = data[data['Sample Number'] == i][category_name]
+        sample_data = data[data['Sample'] == i][category_name]
 
         # Fetch max/min value
         max_val = sample_data.max()
@@ -356,11 +355,11 @@ def x_bar_r_chart_values(data, sample_size, R_BAR, category_name):
     x_bar_vals = list() # Store for the X_bar values from all the samples
 
     # Step 1: Calculate and store the range of all the sample ranges
-    for i in data['Sample Number'].unique().tolist():
+    for i in data['Sample'].unique().tolist():
 
         # Parse sample specific data
         ## NOTE: Make sure that you change the field that you want to parse the data for - in this case Voltage
-        sample_data = data[data['Sample Number'] == i][category_name]
+        sample_data = data[data['Sample'] == i][category_name]
 
         # Calculate average of sample (x_bar)
         x_bar = sample_data.mean()
@@ -390,11 +389,11 @@ def chart_control_type(chart_name, param_vals, param_UCL, param_LCL):
     # Verify that parameters do not fall out of the control limits
     for param in param_vals:
         if param < param_LCL or param > param_UCL:
-            print("FAILURE: {} chart is out of control because Val: {}, falls out of control limits: LCL {}, UCL {}".format(chart_name, param, param_LCL, param_UCL))
+            print("FAILURE: {} chart is out of control because Val: {}, falls out of control limits: LCL {}, UCL {}\n".format(chart_name, param, param_LCL, param_UCL))
             return
 
     
-    print("PASS: {} chart is in control".format(chart_name))
+    print("PASS: {} chart is in control\n".format(chart_name))
 
     return
 

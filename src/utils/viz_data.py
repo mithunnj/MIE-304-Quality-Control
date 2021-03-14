@@ -25,7 +25,7 @@ def histogram_plot(data, bins):
     if not bins:
         sys.exit('ERROR: <viz_data> assertion failed to find valid number of bins for Histogram')
 
-    plt.hist(data.Densities,color='blue',bins=bins)
+    plt.hist(data, color='blue',bins=bins)
     plt.show()
     print("Successfully finished plotting Histogram with {} bins".format(bins))
 

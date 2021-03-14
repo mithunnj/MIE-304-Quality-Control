@@ -10,7 +10,7 @@ import argparse
 import os
 
 from utils.load_data import load_csv
-from utils.calc_stats import null_hypothesis_testing_single_sample, type_2_beta
+from utils.calc_stats import null_hypothesis_testing, type_2_beta
 
 # Globals
 Q3_DATA_FP = "../data/03_data.csv"
@@ -26,7 +26,7 @@ args = parser.parse_args()
 
 if args.q1:
     null_hypothesis = 12.00 # Given in question
-    null_hypothesis_testing_single_sample(DATA, 'Net Contents (Oz)', null_hypothesis)
+    null_hypothesis_testing(DATA, 'Net Contents (Oz)', null_hypothesis)
 
 if args.q2:
     given_population_mean = 12.00
