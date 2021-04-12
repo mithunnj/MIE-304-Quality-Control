@@ -6,26 +6,29 @@ import pandas as pd
 import os
 import sys
 import datetime
+import matplotlib  
+matplotlib.use('TkAgg') 
+import matplotlib.pyplot as plt
+import numpy as np
 
 DATA_FP = os.path.dirname(os.getcwd()) + "/data/MiningProcess_Flotation_Plant_Database.csv"
 NEW_DATA_FP = os.path.dirname(os.getcwd()) + "/data/MiningProcess_Flotation_Plant_Database_FLOATS.csv"
 
 # Load data
-df = pd.read_csv(DATA_FP)
+df = pd.read_csv(NEW_DATA_FP)
 column_names = list(df.columns.values)
 
-# Fix all data except for timestamp data
-edit_columns = [x for x in column_names if x != 'date'] # Get column names in dataframe and remove timestamp column
+print(column_names)
+x_title = 'date'
+y_title = "Ore Pulp Density"
 
-for column in edit_columns: 
-    edit_data = list() # Will store the converted data
+x = df[x_title][::350].tolist()
+y = df [y_title][::350].tolist()
 
-    # Convert all commas in data in this column to '.' to convert to float
-    for data in df[column]:
-        edit_data.append(float(data.replace(',','.')))
+dates = [pd.to_datetime(d.split(' ')[0]) for d in x]
 
-    df[column] = edit_data # Overwrite the column data with the correct format
-
-# Save the converted data to a new .csv file
-df.to_csv(NEW_DATA_FP)
-
+plt.scatter(dates,y)
+plt.title("Scatter Diagram Quality Tool")
+plt.xlabel(x_title)
+plt.ylabel(y_title)
+plt.show()
